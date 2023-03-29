@@ -23,6 +23,7 @@ import io.ezard.manuscript.bottomsheet.BottomSheet
 import io.ezard.manuscript.library.LocalManuscriptLibraryScope
 import io.ezard.manuscript.theme.LocalManuscriptComponentName
 import io.ezard.manuscript.theme.LocalManuscriptComponentTheme
+import io.ezard.manuscript.theme.ManuscriptComponentTheme
 import io.ezard.manuscript.theme.ManuscriptTheme
 
 @Composable
@@ -175,48 +176,54 @@ fun Manuscript(darkTheme: Boolean? = null, block: @Composable ManuscriptScope.()
         bottomSheetState = BottomSheetState(BottomSheetValue.Collapsed),
     )
     val sheetPeekHeight = getBottomSheetPeekHeight()
-    val isSystemInDarkTheme = darkTheme ?: isSystemInDarkTheme()
-    var componentDarkTheme by remember { mutableStateOf(isSystemInDarkTheme) }
+    val initialDarkTheme = darkTheme ?: isSystemInDarkTheme()
+    var componentDarkTheme by remember { mutableStateOf(initialDarkTheme) }
     ManuscriptTheme {
-        BottomSheetScaffold(
-            scaffoldState = scaffoldState,
-            topBar = {
-                ManuscriptTopAppBar(
-                    onBackPressed = {
-                        manuscriptLibraryScope.onComponentSelected(null)
-                    },
-                    onDarkThemeChange = { updatedDarkTheme ->
-                        componentDarkTheme = updatedDarkTheme
-                    },
-                )
-            },
-            sheetPeekHeight = sheetPeekHeight,
-            sheetShape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
-            sheetContent = {
-                val actions by scope.actions.collectAsState()
-                BottomSheet(
-                    controls = scope.controls,
-                    actions = actions,
-                    bottomSheetState = scaffoldState.bottomSheetState,
-                )
-            },
-        ) { paddingValues ->
-            Column(
-                modifier = Modifier
-                    .padding(paddingValues)
-                    .fillMaxSize(),
-            ) {
-                var selectedVariantIndex by remember { mutableStateOf(0) }
-                ManuscriptTabs(
-                    variants = scope.variants,
-                    selectedVariantIndex = selectedVariantIndex,
-                    onVariantSelected = { variantIndex -> selectedVariantIndex = variantIndex },
-                )
-                ComponentWrapper(
-                    bottomSheetState = scaffoldState.bottomSheetState,
-                    sheetPeekHeight = sheetPeekHeight,
+        CompositionLocalProvider(
+            LocalManuscriptComponentTheme provides ManuscriptComponentTheme(
+                darkTheme = componentDarkTheme,
+            ),
+        ) {
+            BottomSheetScaffold(
+                scaffoldState = scaffoldState,
+                topBar = {
+                    ManuscriptTopAppBar(
+                        onBackPressed = {
+                            manuscriptLibraryScope.onComponentSelected(null)
+                        },
+                        onDarkThemeChange = { updatedDarkTheme ->
+                            componentDarkTheme = updatedDarkTheme
+                        },
+                    )
+                },
+                sheetPeekHeight = sheetPeekHeight,
+                sheetShape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
+                sheetContent = {
+                    val actions by scope.actions.collectAsState()
+                    BottomSheet(
+                        controls = scope.controls,
+                        actions = actions,
+                        bottomSheetState = scaffoldState.bottomSheetState,
+                    )
+                },
+            ) { paddingValues ->
+                Column(
+                    modifier = Modifier
+                        .padding(paddingValues)
+                        .fillMaxSize(),
                 ) {
-                    scope.variants[selectedVariantIndex].block()
+                    var selectedVariantIndex by remember { mutableStateOf(0) }
+                    ManuscriptTabs(
+                        variants = scope.variants,
+                        selectedVariantIndex = selectedVariantIndex,
+                        onVariantSelected = { variantIndex -> selectedVariantIndex = variantIndex },
+                    )
+                    ComponentWrapper(
+                        bottomSheetState = scaffoldState.bottomSheetState,
+                        sheetPeekHeight = sheetPeekHeight,
+                    ) {
+                        scope.variants[selectedVariantIndex].block()
+                    }
                 }
             }
         }
