@@ -1,6 +1,5 @@
 package io.ezard.manuscript.manuscript
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -21,10 +20,9 @@ import io.ezard.manuscript.BackPressHandler
 import io.ezard.manuscript.Variant
 import io.ezard.manuscript.bottomsheet.BottomSheet
 import io.ezard.manuscript.library.LocalManuscriptLibraryScope
+import io.ezard.manuscript.theme.*
+import io.ezard.manuscript.theme.DarkColours
 import io.ezard.manuscript.theme.LocalManuscriptComponentName
-import io.ezard.manuscript.theme.LocalManuscriptComponentTheme
-import io.ezard.manuscript.theme.ManuscriptComponentTheme
-import io.ezard.manuscript.theme.ManuscriptTheme
 
 @Composable
 private fun PreviewModeManuscript(variants: List<Variant>) {
@@ -120,7 +118,6 @@ private fun <T> tryWithDefault(defaultValue: T, block: () -> T): T {
 @Composable
 private fun ColumnScope.ComponentWrapper(
     bottomSheetState: BottomSheetState,
-    sheetPeekHeight: Dp,
     content: @Composable () -> Unit,
 ) {
     var wrapperHeight by remember { mutableStateOf(0) }
@@ -135,23 +132,17 @@ private fun ColumnScope.ComponentWrapper(
             .weight(1f)
             .onSizeChanged { size -> wrapperHeight = size.height },
     ) {
-        ManuscriptTheme(
-            darkTheme = LocalManuscriptComponentTheme.current.darkTheme ?: isSystemInDarkTheme(),
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(
+                    with(LocalDensity.current) {
+                        (wrapperHeight - (startBottomSheetOffset - bottomSheetOffset)).toDp()
+                    },
+                ),
         ) {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(
-                        with(LocalDensity.current) {
-                            val offset = startBottomSheetOffset - bottomSheetOffset
-                            (wrapperHeight - offset).toDp() - sheetPeekHeight
-                        },
-                    )
-                    .background(MaterialTheme.colors.background),
-            ) {
-                content()
-            }
+            content()
         }
     }
 }
@@ -175,28 +166,32 @@ fun Manuscript(darkTheme: Boolean? = null, block: @Composable ManuscriptScope.()
     val scaffoldState = rememberBottomSheetScaffoldState(
         bottomSheetState = BottomSheetState(BottomSheetValue.Collapsed),
     )
-    val sheetPeekHeight = getBottomSheetPeekHeight()
     val initialDarkTheme = darkTheme ?: isSystemInDarkTheme()
-    var componentDarkTheme by remember { mutableStateOf(initialDarkTheme) }
+    var isComponentInDarkTheme by remember { mutableStateOf(initialDarkTheme) }
+    val backgroundColour = when {
+        isComponentInDarkTheme -> DarkColours.background
+        else -> LightColours.background
+    }
     ManuscriptTheme {
         CompositionLocalProvider(
             LocalManuscriptComponentTheme provides ManuscriptComponentTheme(
-                darkTheme = componentDarkTheme,
+                darkTheme = isComponentInDarkTheme,
             ),
         ) {
             BottomSheetScaffold(
                 scaffoldState = scaffoldState,
+                backgroundColor = backgroundColour,
                 topBar = {
                     ManuscriptTopAppBar(
                         onBackPressed = {
                             manuscriptLibraryScope.onComponentSelected(null)
                         },
                         onDarkThemeChange = { updatedDarkTheme ->
-                            componentDarkTheme = updatedDarkTheme
+                            isComponentInDarkTheme = updatedDarkTheme
                         },
                     )
                 },
-                sheetPeekHeight = sheetPeekHeight,
+                sheetPeekHeight = getBottomSheetPeekHeight(),
                 sheetShape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
                 sheetContent = {
                     val actions by scope.actions.collectAsState()
@@ -218,10 +213,7 @@ fun Manuscript(darkTheme: Boolean? = null, block: @Composable ManuscriptScope.()
                         selectedVariantIndex = selectedVariantIndex,
                         onVariantSelected = { variantIndex -> selectedVariantIndex = variantIndex },
                     )
-                    ComponentWrapper(
-                        bottomSheetState = scaffoldState.bottomSheetState,
-                        sheetPeekHeight = sheetPeekHeight,
-                    ) {
+                    ComponentWrapper(bottomSheetState = scaffoldState.bottomSheetState) {
                         scope.variants[selectedVariantIndex].block()
                     }
                 }

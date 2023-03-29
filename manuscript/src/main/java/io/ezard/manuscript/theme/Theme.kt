@@ -6,20 +6,7 @@ import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
 
-private val DarkColourScheme = darkColors(
-    primary = Grey400,
-    onPrimary = White,
-    secondary = Accent,
-    onSecondary = Black,
-    surface = Grey400,
-    onSurface = White,
-    background = Black,
-    onBackground = White,
-    error = Red,
-    onError = White,
-)
-
-private val LightColourScheme = lightColors(
+internal val LightColours = lightColors(
     primary = Black,
     onPrimary = White,
     secondary = Accent,
@@ -32,14 +19,27 @@ private val LightColourScheme = lightColors(
     onError = White,
 )
 
+internal val DarkColours = darkColors(
+    primary = Grey400,
+    onPrimary = White,
+    secondary = Accent,
+    onSecondary = Black,
+    surface = Grey400,
+    onSurface = White,
+    background = Black,
+    onBackground = White,
+    error = Red,
+    onError = White,
+)
+
 @Composable
 fun ManuscriptTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit,
 ) {
     val colours = when {
-        darkTheme -> DarkColourScheme
-        else -> LightColourScheme
+        darkTheme -> DarkColours
+        else -> LightColours
     }
     MaterialTheme(
         colors = colours,
