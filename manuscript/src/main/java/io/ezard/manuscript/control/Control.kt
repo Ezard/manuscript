@@ -3,13 +3,11 @@ package io.ezard.manuscript.control
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
 import androidx.compose.material.TextFieldDefaults
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import io.ezard.manuscript.manuscript.ManuscriptScope
 import kotlin.reflect.KProperty
 
 class Control<T>(
@@ -33,5 +31,19 @@ internal fun <T> Control(control: Control<T>, block: @Composable BoxScope.() -> 
         Box(modifier = Modifier.weight(1f)) {
             block()
         }
+    }
+}
+
+context(ManuscriptScope)
+@Composable
+fun <T> ManuscriptScope.control(name: String, defaultValue: T): Control<T> {
+    val state = remember { mutableStateOf(defaultValue) }
+    return remember {
+        registerControl(
+            Control(
+                name = name,
+                state = state,
+            ),
+        )
     }
 }
