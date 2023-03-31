@@ -33,7 +33,7 @@ internal val DarkColours = darkColors(
 )
 
 @Composable
-fun ManuscriptTheme(
+internal fun ManuscriptTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit,
 ) {

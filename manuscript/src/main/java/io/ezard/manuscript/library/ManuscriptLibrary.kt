@@ -25,25 +25,23 @@ fun ManuscriptLibrary(block: @Composable ManuscriptLibraryScope.() -> Unit) {
         var selectedComponent: Pair<String, @Composable () -> Unit>? by remember {
             mutableStateOf(null)
         }
-        val scope = remember {
-            ManuscriptLibraryScopeInstance { component ->
-                selectedComponent = component
-            }
+        val data = ManuscriptLibraryData { component ->
+            selectedComponent = component
         }
+        val scope = remember { object : ManuscriptLibraryScope {} }
         val component = selectedComponent
-        if (component == null) {
-            Scaffold(topBar = { LibraryTopAppBar() }) { paddingValues ->
-                Column(modifier = Modifier.padding(paddingValues).padding(horizontal = 8.dp)) {
-                    Spacer(modifier = Modifier.height(16.dp))
-                    block(scope)
+        CompositionLocalProvider(LocalManuscriptLibraryData provides data) {
+            if (component == null) {
+                Scaffold(topBar = { LibraryTopAppBar() }) { paddingValues ->
+                    Column(modifier = Modifier.padding(paddingValues).padding(horizontal = 8.dp)) {
+                        Spacer(modifier = Modifier.height(16.dp))
+                        block(scope)
+                    }
                 }
-            }
-        } else {
-            CompositionLocalProvider(
-                LocalManuscriptComponentName provides component.first,
-                LocalManuscriptLibraryScope provides scope,
-            ) {
-                component.second()
+            } else {
+                CompositionLocalProvider(LocalManuscriptComponentName provides component.first) {
+                    component.second()
+                }
             }
         }
     }

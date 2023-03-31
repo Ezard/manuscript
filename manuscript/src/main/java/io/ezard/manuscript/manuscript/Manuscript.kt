@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import io.ezard.manuscript.BackPressHandler
 import io.ezard.manuscript.Variant
 import io.ezard.manuscript.bottomsheet.BottomSheet
-import io.ezard.manuscript.library.LocalManuscriptLibraryScope
+import io.ezard.manuscript.library.LocalManuscriptLibraryData
 import io.ezard.manuscript.theme.*
 import io.ezard.manuscript.theme.DarkColours
 import io.ezard.manuscript.theme.LocalManuscriptComponentName
@@ -150,18 +150,17 @@ private fun ColumnScope.ComponentWrapper(
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun Manuscript(darkTheme: Boolean? = null, block: @Composable ManuscriptScope.() -> Unit) {
-    val scope = remember { ManuscriptScopeInstance() }
+    val scope = remember { object : ManuscriptScope {} }
+    val data = LocalManuscriptData.current
     block(scope)
 
     if (LocalInspectionMode.current) {
-        PreviewModeManuscript(variants = scope.variants)
+        PreviewModeManuscript(variants = data.variants)
         return
     }
 
-    val manuscriptLibraryScope = LocalManuscriptLibraryScope.current
-    BackPressHandler {
-        manuscriptLibraryScope.onComponentSelected(null)
-    }
+    val manuscriptLibraryData = LocalManuscriptLibraryData.current
+    BackPressHandler { manuscriptLibraryData.onComponentSelected(null) }
 
     val scaffoldState = rememberBottomSheetScaffoldState(
         bottomSheetState = BottomSheetState(BottomSheetValue.Collapsed),
@@ -184,7 +183,7 @@ fun Manuscript(darkTheme: Boolean? = null, block: @Composable ManuscriptScope.()
                 topBar = {
                     ManuscriptTopAppBar(
                         onBackPressed = {
-                            manuscriptLibraryScope.onComponentSelected(null)
+                            manuscriptLibraryData.onComponentSelected(null)
                         },
                         onDarkThemeChange = { updatedDarkTheme ->
                             isComponentInDarkTheme = updatedDarkTheme
@@ -194,9 +193,9 @@ fun Manuscript(darkTheme: Boolean? = null, block: @Composable ManuscriptScope.()
                 sheetPeekHeight = getBottomSheetPeekHeight(),
                 sheetShape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
                 sheetContent = {
-                    val actions by scope.actions.collectAsState()
+                    val actions by data.actions.collectAsState()
                     BottomSheet(
-                        controls = scope.controls,
+                        controls = data.controls,
                         actions = actions,
                         bottomSheetState = scaffoldState.bottomSheetState,
                     )
@@ -209,12 +208,12 @@ fun Manuscript(darkTheme: Boolean? = null, block: @Composable ManuscriptScope.()
                 ) {
                     var selectedVariantIndex by remember { mutableStateOf(0) }
                     ManuscriptTabs(
-                        variants = scope.variants,
+                        variants = data.variants,
                         selectedVariantIndex = selectedVariantIndex,
                         onVariantSelected = { variantIndex -> selectedVariantIndex = variantIndex },
                     )
                     ComponentWrapper(bottomSheetState = scaffoldState.bottomSheetState) {
-                        scope.variants[selectedVariantIndex].block()
+                        data.variants[selectedVariantIndex].block()
                     }
                 }
             }

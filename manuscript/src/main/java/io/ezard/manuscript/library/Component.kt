@@ -15,16 +15,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
+context(ManuscriptLibraryScope)
 @Composable
-fun ManuscriptLibraryScope.Component(
+fun Component(
     name: String,
     block: @Composable () -> Unit,
 ) {
+    val data = LocalManuscriptLibraryData.current
     Box(
         modifier = Modifier.clickable(
             interactionSource = remember { MutableInteractionSource() },
             indication = rememberRipple(),
-            onClick = { onComponentSelected(name to block) },
+            onClick = { data.onComponentSelected(name to block) },
         ),
     ) {
         Text(

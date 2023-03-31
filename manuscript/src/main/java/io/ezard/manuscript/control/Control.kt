@@ -7,6 +7,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import io.ezard.manuscript.manuscript.LocalManuscriptData
 import io.ezard.manuscript.manuscript.ManuscriptScope
 import kotlin.reflect.KProperty
 
@@ -36,10 +37,11 @@ internal fun <T> Control(control: Control<T>, block: @Composable BoxScope.() -> 
 
 context(ManuscriptScope)
 @Composable
-fun <T> ManuscriptScope.control(name: String, defaultValue: T): Control<T> {
+fun <T> control(name: String, defaultValue: T): Control<T> {
     val state = remember { mutableStateOf(defaultValue) }
+    val data = LocalManuscriptData.current
     return remember {
-        registerControl(
+        data.registerControl(
             Control(
                 name = name,
                 state = state,

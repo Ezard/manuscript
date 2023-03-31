@@ -36,7 +36,7 @@ private fun onTabSelected(
 }
 
 @Composable
-fun BottomSheetTab(
+private fun BottomSheetTab(
     name: String,
     index: Int,
     selectedIndex: Int,
