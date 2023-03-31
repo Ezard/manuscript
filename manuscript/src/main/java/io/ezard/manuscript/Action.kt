@@ -31,7 +31,7 @@ fun action(name: String): Action {
 private val DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss")
 
 @Composable
-fun Action(action: Pair<LocalDateTime, Action>) {
+internal fun Action(action: Pair<LocalDateTime, Action>) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
             text = DATE_TIME_FORMATTER.format(action.first),
