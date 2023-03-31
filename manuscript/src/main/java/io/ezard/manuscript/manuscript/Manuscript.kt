@@ -4,10 +4,6 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.DarkMode
-import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,48 +38,6 @@ private fun getBottomSheetPeekHeight(): Dp {
 }
 
 @Composable
-private fun ManuscriptTopAppBar(
-    onBackPressed: () -> Unit,
-    onDarkThemeChange: (darkTheme: Boolean) -> Unit = {},
-) {
-    val navigationIcon: (@Composable () -> Unit)? = when (LocalManuscriptComponentName.current) {
-        null -> null
-        else -> {
-            {
-                IconButton(onClick = onBackPressed) {
-                    Icon(
-                        imageVector = Icons.Default.ArrowBack,
-                        contentDescription = "",
-                    )
-                }
-            }
-        }
-    }
-    val action: @Composable RowScope.() -> Unit = {
-        when (LocalManuscriptComponentTheme.current.darkTheme) {
-            true -> IconButton(onClick = { onDarkThemeChange(false) }) {
-                Icon(
-                    imageVector = Icons.Default.LightMode,
-                    contentDescription = "",
-                )
-            }
-            false -> IconButton(onClick = { onDarkThemeChange(true) }) {
-                Icon(
-                    imageVector = Icons.Default.DarkMode,
-                    contentDescription = "",
-                )
-            }
-            else -> Unit
-        }
-    }
-    TopAppBar(
-        navigationIcon = navigationIcon,
-        title = { Text(text = LocalManuscriptComponentName.current ?: "Component") },
-        actions = action,
-    )
-}
-
-@Composable
 private fun ManuscriptTabs(
     variants: List<Variant>,
     selectedVariantIndex: Int,
@@ -110,6 +64,14 @@ private fun <T> tryWithDefault(defaultValue: T, block: () -> T): T {
     } catch (e: Exception) {
         defaultValue
     }
+}
+
+@Composable
+private fun ComponentTheme(content: @Composable () -> Unit) {
+    LocalManuscriptLibraryData.current.defaultComponentTheme(
+        darkTheme = LocalManuscriptComponentTheme.current.darkTheme,
+        content = content,
+    )
 }
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -140,7 +102,7 @@ private fun ColumnScope.ComponentWrapper(
                     },
                 ),
         ) {
-            content()
+            ComponentTheme(content = content)
         }
     }
 }
@@ -182,7 +144,7 @@ fun Manuscript(darkTheme: Boolean? = null, block: @Composable ManuscriptScope.()
     ManuscriptTheme {
         CompositionLocalProvider(
             LocalManuscriptComponentTheme provides ManuscriptComponentTheme(
-                darkTheme = isComponentInDarkTheme,
+                isDarkTheme = isComponentInDarkTheme,
             ),
         ) {
             BottomSheetScaffold(
