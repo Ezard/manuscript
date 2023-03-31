@@ -1,8 +1,6 @@
 name: Publish
 on:
   push:
-    branches:
-      - main
     tags:
       - '[0-9]+.[0-9]+.[0-9]+'
 
@@ -14,6 +12,7 @@ jobs:
       - uses: actions/setup-java@v3
         with:
           java-version: 11
+          distribution: zulu
       - uses: gradle/gradle-build-action@v2
       - run: ./gradlew publish
         env:
