@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import io.ezard.manuscript.BackPressHandler
 import io.ezard.manuscript.Variant
 import io.ezard.manuscript.bottomsheet.BottomSheet
-import io.ezard.manuscript.library.LocalManuscriptLibraryScope
+import io.ezard.manuscript.library.LocalManuscriptLibraryData
 import io.ezard.manuscript.theme.*
 import io.ezard.manuscript.theme.DarkColours
 import io.ezard.manuscript.theme.LocalManuscriptComponentName
@@ -159,10 +159,8 @@ fun Manuscript(darkTheme: Boolean? = null, block: @Composable ManuscriptScope.()
         return
     }
 
-    val manuscriptLibraryScope = LocalManuscriptLibraryScope.current
-    BackPressHandler {
-        manuscriptLibraryScope.onComponentSelected(null)
-    }
+    val manuscriptLibraryData = LocalManuscriptLibraryData.current
+    BackPressHandler { manuscriptLibraryData.onComponentSelected(null) }
 
     val scaffoldState = rememberBottomSheetScaffoldState(
         bottomSheetState = BottomSheetState(BottomSheetValue.Collapsed),
@@ -185,7 +183,7 @@ fun Manuscript(darkTheme: Boolean? = null, block: @Composable ManuscriptScope.()
                 topBar = {
                     ManuscriptTopAppBar(
                         onBackPressed = {
-                            manuscriptLibraryScope.onComponentSelected(null)
+                            manuscriptLibraryData.onComponentSelected(null)
                         },
                         onDarkThemeChange = { updatedDarkTheme ->
                             isComponentInDarkTheme = updatedDarkTheme
