@@ -20,12 +20,15 @@ private fun LibraryTopAppBar() {
 }
 
 @Composable
-fun ManuscriptLibrary(block: @Composable ManuscriptLibraryScope.() -> Unit) {
+fun ManuscriptLibrary(
+    defaultDarkTheme: Boolean? = null,
+    block: @Composable ManuscriptLibraryScope.() -> Unit,
+) {
     ManuscriptTheme {
         var selectedComponent: Pair<String, @Composable () -> Unit>? by remember {
             mutableStateOf(null)
         }
-        val data = ManuscriptLibraryData { component ->
+        val data = ManuscriptLibraryData(defaultLibraryDarkTheme = defaultDarkTheme) { component ->
             selectedComponent = component
         }
         val scope = remember { object : ManuscriptLibraryScope {} }

@@ -21,8 +21,6 @@ import io.ezard.manuscript.Variant
 import io.ezard.manuscript.bottomsheet.BottomSheet
 import io.ezard.manuscript.library.LocalManuscriptLibraryData
 import io.ezard.manuscript.theme.*
-import io.ezard.manuscript.theme.DarkColours
-import io.ezard.manuscript.theme.LocalManuscriptComponentName
 
 @Composable
 private fun PreviewModeManuscript(variants: List<Variant>) {
@@ -147,6 +145,16 @@ private fun ColumnScope.ComponentWrapper(
     }
 }
 
+@Composable
+private fun getDefaultDarkTheme(defaultComponentDarkTheme: Boolean?): Boolean {
+    val defaultLibraryDarkTheme = LocalManuscriptLibraryData.current.defaultLibraryDarkTheme
+    return when {
+        defaultComponentDarkTheme != null -> defaultComponentDarkTheme
+        defaultLibraryDarkTheme != null -> defaultLibraryDarkTheme
+        else -> isSystemInDarkTheme()
+    }
+}
+
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun Manuscript(darkTheme: Boolean? = null, block: @Composable ManuscriptScope.() -> Unit) {
@@ -165,7 +173,7 @@ fun Manuscript(darkTheme: Boolean? = null, block: @Composable ManuscriptScope.()
     val scaffoldState = rememberBottomSheetScaffoldState(
         bottomSheetState = BottomSheetState(BottomSheetValue.Collapsed),
     )
-    val initialDarkTheme = darkTheme ?: isSystemInDarkTheme()
+    val initialDarkTheme = getDefaultDarkTheme(defaultComponentDarkTheme = darkTheme)
     var isComponentInDarkTheme by remember { mutableStateOf(initialDarkTheme) }
     val backgroundColour = when {
         isComponentInDarkTheme -> DarkColours.background
