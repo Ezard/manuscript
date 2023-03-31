@@ -41,8 +41,18 @@ android {
     }
 }
 
+static def getVersion() {
+    // Unix
+    def result = "git describe --tags --abbrev=0".execute().text.trim()
+    // Windows
+    if (result.empty) result = "PowerShell -Command git describe --tags --abbrev=0".execute().text.trim()
+    // Git isn't installed, or there are no tags
+    if (result.empty) result = "0.0.0"
+    return result
+}
+
 mavenPublishing {
-    coordinates("io.ezard.manuscript", "manuscript", "0.1.2")
+    coordinates("io.ezard.manuscript", "manuscript", getVersion())
     publishToMavenCentral(SonatypeHost.S01)
     signAllPublications()
 
