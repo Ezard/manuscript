@@ -22,16 +22,24 @@ private fun LibraryTopAppBar() {
 @Composable
 fun ManuscriptLibrary(
     defaultDarkTheme: Boolean? = null,
+    defaultComponentTheme: @Composable (
+        darkTheme: Boolean,
+        block: @Composable () -> Unit,
+    ) -> Unit = { _, content -> content() },
     block: @Composable ManuscriptLibraryScope.() -> Unit,
 ) {
     ManuscriptTheme {
         var selectedComponent: Pair<String, @Composable () -> Unit>? by remember {
             mutableStateOf(null)
         }
-        val data = ManuscriptLibraryData(defaultLibraryDarkTheme = defaultDarkTheme) { component ->
-            selectedComponent = component
-        }
+
+        val data = ManuscriptLibraryData(
+            defaultLibraryDarkTheme = defaultDarkTheme,
+            defaultComponentTheme = defaultComponentTheme,
+        ) { component -> selectedComponent = component }
+
         val scope = remember { object : ManuscriptLibraryScope {} }
+
         val component = selectedComponent
         CompositionLocalProvider(LocalManuscriptLibraryData provides data) {
             if (component == null) {
