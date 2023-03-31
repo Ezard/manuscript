@@ -150,11 +150,12 @@ private fun ColumnScope.ComponentWrapper(
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun Manuscript(darkTheme: Boolean? = null, block: @Composable ManuscriptScope.() -> Unit) {
-    val scope = remember { ManuscriptScopeInstance() }
+    val scope = remember { object : ManuscriptScope {} }
+    val data = LocalManuscriptData.current
     block(scope)
 
     if (LocalInspectionMode.current) {
-        PreviewModeManuscript(variants = scope.variants)
+        PreviewModeManuscript(variants = data.variants)
         return
     }
 
@@ -194,9 +195,9 @@ fun Manuscript(darkTheme: Boolean? = null, block: @Composable ManuscriptScope.()
                 sheetPeekHeight = getBottomSheetPeekHeight(),
                 sheetShape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
                 sheetContent = {
-                    val actions by scope.actions.collectAsState()
+                    val actions by data.actions.collectAsState()
                     BottomSheet(
-                        controls = scope.controls,
+                        controls = data.controls,
                         actions = actions,
                         bottomSheetState = scaffoldState.bottomSheetState,
                     )
@@ -209,12 +210,12 @@ fun Manuscript(darkTheme: Boolean? = null, block: @Composable ManuscriptScope.()
                 ) {
                     var selectedVariantIndex by remember { mutableStateOf(0) }
                     ManuscriptTabs(
-                        variants = scope.variants,
+                        variants = data.variants,
                         selectedVariantIndex = selectedVariantIndex,
                         onVariantSelected = { variantIndex -> selectedVariantIndex = variantIndex },
                     )
                     ComponentWrapper(bottomSheetState = scaffoldState.bottomSheetState) {
-                        scope.variants[selectedVariantIndex].block()
+                        data.variants[selectedVariantIndex].block()
                     }
                 }
             }
