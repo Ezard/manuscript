@@ -36,10 +36,11 @@ private fun GroupName(name: String) {
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun ManuscriptLibraryScope.Group(
+fun Group(
     name: String,
-    block: @Composable ManuscriptLibraryScope.() -> Unit,
+    block: @Composable ManuscriptLibraryGroupScope.() -> Unit,
 ) {
+    val scope = remember { object : ManuscriptLibraryGroupScope {} }
     Column {
         var expanded by remember(name) { mutableStateOf(false) }
         Surface(shape = RoundedCornerShape(4.dp), elevation = 4.dp) {
@@ -49,7 +50,7 @@ fun ManuscriptLibraryScope.Group(
                 }
                 AnimatedVisibility(visible = expanded) {
                     Column {
-                        block()
+                        block(scope)
                     }
                 }
             }

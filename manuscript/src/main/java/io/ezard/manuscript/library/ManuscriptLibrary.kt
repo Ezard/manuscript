@@ -71,9 +71,6 @@ private fun ManuscriptLibraryPreview() {
             Component(name = "Line Chart") {}
             Component(name = "Pie Chart") {}
         }
-        Group(name = "Progress Indicators") {
-            Component(name = "Progress Bar") {}
-            Component(name = "Progress Circle") {}
-        }
+        Component(name = "Progress Indicator") {}
     }
 }
