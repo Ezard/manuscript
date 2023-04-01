@@ -118,7 +118,7 @@ private fun getDefaultDarkTheme(defaultComponentDarkTheme: Boolean?): Boolean {
 }
 
 /**
- * Wrapper composable to enable usage of variants / controls / actions
+ * Composable to enable usage of variants / controls / actions
  *
  * @param [darkTheme] whether this component should be displayed using a dark background by default
  *
