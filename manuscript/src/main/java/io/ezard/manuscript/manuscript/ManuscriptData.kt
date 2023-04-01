@@ -3,9 +3,9 @@ package io.ezard.manuscript.manuscript
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.compositionLocalOf
-import io.ezard.manuscript.Action
-import io.ezard.manuscript.Variant
-import io.ezard.manuscript.control.Control
+import io.ezard.manuscript.actions.Action
+import io.ezard.manuscript.controls.Control
+import io.ezard.manuscript.variant.Variant
 import java.time.LocalDateTime
 import kotlinx.coroutines.flow.MutableStateFlow
 

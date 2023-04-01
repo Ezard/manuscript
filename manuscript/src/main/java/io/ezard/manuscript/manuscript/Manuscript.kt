@@ -12,11 +12,11 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import io.ezard.manuscript.BackPressHandler
-import io.ezard.manuscript.Variant
 import io.ezard.manuscript.bottomsheet.BottomSheet
 import io.ezard.manuscript.library.LocalManuscriptLibraryData
 import io.ezard.manuscript.theme.*
+import io.ezard.manuscript.utils.BackPressHandler
+import io.ezard.manuscript.variant.Variant
 
 @Composable
 private fun PreviewModeManuscript(variants: List<Variant>) {
