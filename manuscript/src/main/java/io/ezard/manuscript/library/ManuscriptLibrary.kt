@@ -19,6 +19,17 @@ private fun LibraryTopAppBar() {
     TopAppBar(title = { Text(text = "Component Library") })
 }
 
+/**
+ * Composable to create a browsable library of components
+ *
+ * @param [defaultDarkTheme] optional configuration to determine whether Manuscript should display components in light or dark mode by default
+ *
+ * Overridden by the `darkTheme` parameter of [Manuscript][io.ezard.manuscript.manuscript.Manuscript], if defined
+ *
+ * @param [defaultComponentTheme] optional configuration to allow each Manuscript component to be wrapped in your theme, including a parameter for whether Manuscript is displaying components in light or dark mode
+ *
+ * @sample [io.ezard.manuscript.library.ManuscriptLibrarySample]
+ */
 @Composable
 fun ManuscriptLibrary(
     defaultDarkTheme: Boolean? = null,
@@ -72,5 +83,22 @@ private fun ManuscriptLibraryPreview() {
             Component(name = "Pie Chart") {}
         }
         Component(name = "Progress Indicator") {}
+    }
+}
+
+@Composable
+private fun ManuscriptLibrarySample() {
+    ManuscriptLibrary {
+        Group(name = "Buttons") {
+            Component(name = "Rectangular Button") {
+                // Manuscript composable goes here
+            }
+            Component(name = "Circular Button") {
+                // Manuscript composable goes here}
+            }
+            Component(name = "Progress Indicator") {
+                // Manuscript composable goes here}
+            }
+        }
     }
 }

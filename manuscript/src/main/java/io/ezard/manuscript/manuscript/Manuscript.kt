@@ -117,6 +117,17 @@ private fun getDefaultDarkTheme(defaultComponentDarkTheme: Boolean?): Boolean {
     }
 }
 
+/**
+ * Composable to enable usage of variants / controls / actions
+ *
+ * @param [darkTheme] whether this component should be displayed using a dark background by default
+ *
+ * Overrides the `defaultDarkTheme` parameter for [ManuscriptLibrary][io.ezard.manuscript.library.ManuscriptLibrary]
+ *
+ * Defaults to [isSystemInDarkTheme] if this value is not specified at either the library level or the component level
+ *
+ * @sample [io.ezard.manuscript.manuscript.ManuscriptSample]
+ */
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun Manuscript(darkTheme: Boolean? = null, block: @Composable ManuscriptScope.() -> Unit) {
@@ -186,6 +197,17 @@ fun Manuscript(darkTheme: Boolean? = null, block: @Composable ManuscriptScope.()
                         data.variants[selectedVariantIndex].block()
                     }
                 }
+            }
+        }
+    }
+}
+
+@Composable
+private fun ManuscriptSample() {
+    Manuscript {
+        Variant("Button") {
+            Button(onClick = {}) {
+                Text(text = "Click me!")
             }
         }
     }
