@@ -6,8 +6,8 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import io.ezard.manuscript.Action
-import io.ezard.manuscript.control.Control
+import io.ezard.manuscript.actions.Action
+import io.ezard.manuscript.controls.Control
 import java.time.LocalDateTime
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch

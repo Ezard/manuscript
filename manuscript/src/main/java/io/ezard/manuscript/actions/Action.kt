@@ -1,4 +1,4 @@
-package io.ezard.manuscript
+package io.ezard.manuscript.actions
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import io.ezard.manuscript.manuscript.LocalManuscriptData
 import io.ezard.manuscript.manuscript.Manuscript
 import io.ezard.manuscript.manuscript.ManuscriptScope
+import io.ezard.manuscript.variant.Variant
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -34,11 +35,11 @@ class Action(
 /**
  * Register an action for this component
  *
- * Calling [trigger][io.ezard.manuscript.Action.trigger] on the returned action will cause an instance of it to appear in "Actions" section of Manuscript's bottom sheet
+ * Calling [trigger][io.ezard.manuscript.actions.Action.trigger] on the returned action will cause an instance of it to appear in "Actions" section of Manuscript's bottom sheet
  *
  * @param [name] the name of the action; this will be displayed to the user when the action is triggered
  *
- * @sample [io.ezard.manuscript.ActionSample]
+ * @sample [io.ezard.manuscript.actions.ActionSample]
  */
 context(ManuscriptScope)
 @Composable

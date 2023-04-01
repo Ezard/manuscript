@@ -1,4 +1,4 @@
-package io.ezard.manuscript
+package io.ezard.manuscript.variant
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material.Button
@@ -22,7 +22,7 @@ internal class Variant(
  *
  * @param [name] the name of the variant; this is displayed to the user as a tab
  *
- * @sample [io.ezard.manuscript.VariantSample]
+ * @sample [io.ezard.manuscript.variant.VariantSample]
  */
 context(ManuscriptScope)
 @Composable

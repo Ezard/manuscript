@@ -6,7 +6,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import io.ezard.manuscript.control.*
+import io.ezard.manuscript.controls.*
 
 @Suppress("UNCHECKED_CAST")
 @Composable

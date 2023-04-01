@@ -1,4 +1,4 @@
-package io.ezard.manuscript.control
+package io.ezard.manuscript.controls
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
@@ -8,10 +8,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import io.ezard.manuscript.Variant
 import io.ezard.manuscript.manuscript.LocalManuscriptData
 import io.ezard.manuscript.manuscript.Manuscript
 import io.ezard.manuscript.manuscript.ManuscriptScope
+import io.ezard.manuscript.variant.Variant
 import kotlin.reflect.KProperty
 
 /**
@@ -58,7 +58,7 @@ internal fun <T> Control(control: Control<T>, block: @Composable BoxScope.() -> 
  * @param [name] the name of the control; this will be displayed alongside the input field in Manuscript's bottom sheet
  * @param [defaultValue] the initial value of the control
  *
- * @sample [io.ezard.manuscript.control.ControlSample]
+ * @sample [io.ezard.manuscript.controls.ControlSample]
  */
 context(ManuscriptScope)
 @Composable
