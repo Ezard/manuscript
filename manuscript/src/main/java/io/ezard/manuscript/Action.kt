@@ -14,7 +14,7 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 /**
- * A reference to an action that can be triggered by your component
+ * A reference to an action that can be triggered by a component
  *
  * Call [trigger] to cause an instance of this action to appear in the "Actions" section of Manuscript's bottom sheet
  */
