@@ -38,7 +38,7 @@ class Action(
  *
  * @param [name] the name of the action; this will be displayed to the user when the action is triggered
  *
- * @sample [ActionSample]
+ * @sample [io.ezard.manuscript.ActionSample]
  */
 context(ManuscriptScope)
 @Composable

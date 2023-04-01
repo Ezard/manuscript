@@ -58,7 +58,7 @@ internal fun <T> Control(control: Control<T>, block: @Composable BoxScope.() -> 
  * @param [name] the name of the control; this will be displayed alongside the input field in Manuscript's bottom sheet
  * @param [defaultValue] the initial value of the control
  *
- * @sample [ControlSample]
+ * @sample [io.ezard.manuscript.control.ControlSample]
  */
 context(ManuscriptScope)
 @Composable

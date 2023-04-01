@@ -126,7 +126,7 @@ private fun getDefaultDarkTheme(defaultComponentDarkTheme: Boolean?): Boolean {
  *
  * Defaults to [isSystemInDarkTheme] if this value is not specified at either the library level or the component level
  *
- * @sample [ManuscriptSample]
+ * @sample [io.ezard.manuscript.manuscript.ManuscriptSample]
  */
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
