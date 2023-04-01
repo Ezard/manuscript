@@ -14,6 +14,10 @@ Simply add the dependency to your `build.gradle(.kts) file: ![Maven Central](htt
 
 `implementation("io.ezard.manuscript:manuscript:<latest-version>")`
 
+## Documentation
+
+Docs can be found here: https://ezard.github.io/manuscript/
+
 ## Usage
 
 ### Components
