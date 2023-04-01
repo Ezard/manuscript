@@ -36,9 +36,9 @@ class Action(
  *
  * Calling [trigger][io.ezard.manuscript.Action.trigger] on the returned action will cause an instance of it to appear in "Actions" section of Manuscript's bottom sheet
  *
- * @param name the name of the action; this will be displayed to the user when the action is triggered
+ * @param [name] the name of the action; this will be displayed to the user when the action is triggered
  *
- * @sample [io.ezard.manuscript.ActionSample]
+ * @sample [ActionSample]
  */
 context(ManuscriptScope)
 @Composable
