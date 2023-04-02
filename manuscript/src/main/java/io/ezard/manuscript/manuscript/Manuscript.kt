@@ -13,10 +13,17 @@ import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import io.ezard.manuscript.bottomsheet.BottomSheet
+import io.ezard.manuscript.controls.Control
+import io.ezard.manuscript.controls.StringControl
 import io.ezard.manuscript.library.LocalManuscriptLibraryData
 import io.ezard.manuscript.theme.*
 import io.ezard.manuscript.utils.BackPressHandler
 import io.ezard.manuscript.variant.Variant
+
+@Composable
+fun ManuscriptScope.RegisterControls() {
+    Control(type = String::class) { control -> StringControl(control = control) }
+}
 
 @Composable
 private fun PreviewModeManuscript(variants: List<Variant>) {
@@ -133,6 +140,9 @@ private fun getDefaultDarkTheme(defaultComponentDarkTheme: Boolean?): Boolean {
 fun Manuscript(darkTheme: Boolean? = null, block: @Composable ManuscriptScope.() -> Unit) {
     val scope = remember { object : ManuscriptScope {} }
     val data = LocalManuscriptData.current
+
+    with(scope) { RegisterControls() }
+
     block(scope)
 
     if (LocalInspectionMode.current) {

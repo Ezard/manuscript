@@ -19,16 +19,6 @@ import io.ezard.manuscript.manuscript.ManuscriptScope
 import io.ezard.manuscript.variant.Variant
 import kotlin.reflect.KClass
 
-@Composable
-internal fun <T> CustomControl(
-    control: Control<T>,
-    content: @Composable BoxScope.(Control<T>) -> Unit,
-) {
-    Control(control = control) {
-        content(control)
-    }
-}
-
 /**
  * Register a custom control for handling a data type that Manuscript doesn't natively handle
  *
@@ -37,23 +27,23 @@ internal fun <T> CustomControl(
  *
  * NOTE: if you think that there's a common data type that Manuscript should handle that it doesn't currently handle, then create an issue on the GitHub repo!
  *
- * @sample [io.ezard.manuscript.controls.ColourCustomControl]
+ * @sample [io.ezard.manuscript.controls.ColourControl]
  * @sample [io.ezard.manuscript.controls.CustomControlSample]
  */
 @Suppress("unused")
 @Composable
-fun <T : Any> ManuscriptScope.CustomControl(
+fun <T : Any> ManuscriptScope.Control(
     type: KClass<T>,
     control: @Composable BoxScope.(control: Control<T>) -> Unit,
 ) {
     val data = LocalManuscriptData.current
     remember {
-        data.registerCustomControl(type = type, control = control)
+        data.registerControl(type = type, control = control)
     }
 }
 
 @Composable
-private fun ColourCustomControl(control: Control<Color>) {
+private fun ColourControl(control: Control<Color>) {
     Row {
         var color by control
 
@@ -84,9 +74,9 @@ private fun ColourCustomControl(control: Control<Color>) {
 @Composable
 private fun CustomControlSample() {
     Manuscript {
-        CustomControl(
+        Control(
             type = Color::class,
-            control = { control -> ColourCustomControl(control = control) },
+            control = { control -> ColourControl(control = control) },
         )
 
         val colour by control(name = "Colour", defaultValue = Color.Red)

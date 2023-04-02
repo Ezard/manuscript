@@ -29,19 +29,15 @@ internal fun Controls(controls: List<Control<*>>) {
                 val customControl = data.customControls
                     .firstOrNull { (type) -> type == value::class }
                     ?.second
-                when {
-                    value is Boolean -> BooleanControl(control = control as Control<Boolean>)
-                    value is Double -> DoubleControl(control = control as Control<Double>)
-                    value is Float -> FloatControl(control = control as Control<Float>)
-                    value is Int -> IntControl(control = control as Control<Int>)
-                    value is String -> StringControl(control = control as Control<String>)
-                    customControl != null -> CustomControl(control = control) {
+                if (customControl == null) {
+                    Log.w("Manuscript", "No control found for ${value::class}")
+                } else {
+                    ControlWrapper(control = control) {
                         customControl(control = control)
                     }
-                    else -> Log.w("Manuscript", "No control found for ${value::class}")
-                }
-                if (index < controls.lastIndex) {
-                    Spacer(modifier = Modifier.height(8.dp))
+                    if (index < controls.lastIndex) {
+                        Spacer(modifier = Modifier.height(8.dp))
+                    }
                 }
             }
         }

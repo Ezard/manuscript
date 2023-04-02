@@ -21,7 +21,7 @@ internal class ManuscriptData {
     internal val actions: MutableStateFlow<List<Pair<LocalDateTime, Action>>> =
         MutableStateFlow(emptyList())
 
-    fun <T : Any> registerCustomControl(
+    fun <T : Any> registerControl(
         type: KClass<T>,
         control: @Composable BoxScope.(control: Control<T>) -> Unit,
     ): CustomControlData<T> {

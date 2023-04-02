@@ -28,7 +28,7 @@ class Control<T>(
 }
 
 @Composable
-internal fun <T> Control(control: Control<T>, block: @Composable BoxScope.() -> Unit) {
+internal fun <T> ControlWrapper(control: Control<T>, block: @Composable BoxScope.() -> Unit) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier.height(TextFieldDefaults.MinHeight),
