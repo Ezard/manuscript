@@ -1,7 +1,9 @@
 buildscript {
     ext {
-        kotlin_version = "1.8.0"
+        kotlin_version = "1.8.10"
+        ksp_version = "1.8.10-1.0.9"
         compose_version = "1.4.0"
+        compose_compiler_version = "1.4.4"
         compose_material_version = "1.4.0"
         core_ktx = "1.9.0"
         activity_compose_version = "1.7.0"
@@ -15,4 +17,6 @@ plugins {
     id 'org.jetbrains.kotlin.android' version "$kotlin_version" apply false
     id 'org.jetbrains.dokka' version '1.8.10' apply false
     id 'com.vanniktech.maven.publish' version '0.25.1'
+    id 'org.jetbrains.kotlin.jvm' version "$kotlin_version" apply false
+    id 'com.google.devtools.ksp' version "$ksp_version" apply false
 }

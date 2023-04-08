@@ -11,23 +11,23 @@ import java.time.LocalDateTime
 import kotlin.reflect.KClass
 import kotlinx.coroutines.flow.MutableStateFlow
 
-typealias CustomControlData<T> = Pair<KClass<T>, @Composable BoxScope.(control: Control<T>) -> Unit>
+typealias ControlComponent<T> = Pair<KClass<T>, @Composable BoxScope.(control: Control<T>) -> Unit>
 
 @Immutable
 internal class ManuscriptData {
-    internal val customControls: MutableList<CustomControlData<*>> = mutableListOf()
+    internal val controlComponents: MutableList<ControlComponent<*>> = mutableListOf()
     internal val variants: MutableList<Variant> = mutableListOf()
     internal val controls: MutableList<Control<*>> = mutableListOf()
     internal val actions: MutableStateFlow<List<Pair<LocalDateTime, Action>>> =
         MutableStateFlow(emptyList())
 
-    fun <T : Any> registerControl(
+    fun <T : Any> registerControlComponent(
         type: KClass<T>,
-        control: @Composable BoxScope.(control: Control<T>) -> Unit,
-    ): CustomControlData<T> {
-        val customControl = type to control
+        component: @Composable BoxScope.(control: Control<T>) -> Unit,
+    ): ControlComponent<T> {
+        val customControl = type to component
         @Suppress("UNCHECKED_CAST")
-        customControls.add(customControl as CustomControlData<*>)
+        controlComponents.add(customControl as ControlComponent<*>)
         return customControl
     }
 

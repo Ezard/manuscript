@@ -26,7 +26,7 @@ internal fun Controls(controls: List<Control<*>>) {
             val data = LocalManuscriptData.current
             controls.forEachIndexed { index, control ->
                 val value = control.state.value ?: return@forEachIndexed
-                val customControl = data.customControls
+                val customControl = data.controlComponents
                     .firstOrNull { (type) -> type == value::class }
                     ?.second
                 if (customControl == null) {

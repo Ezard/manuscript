@@ -13,15 +13,18 @@ import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import io.ezard.manuscript.bottomsheet.BottomSheet
-import io.ezard.manuscript.controls.Control
-import io.ezard.manuscript.controls.StringControl
+import io.ezard.manuscript.controls.*
 import io.ezard.manuscript.library.LocalManuscriptLibraryData
 import io.ezard.manuscript.theme.*
 import io.ezard.manuscript.utils.BackPressHandler
 import io.ezard.manuscript.variant.Variant
 
 @Composable
-fun ManuscriptScope.RegisterControls() {
+private fun ManuscriptScope.RegisterDefaultControls() {
+    Control(type = Boolean::class) { control -> BooleanControl(control = control) }
+    Control(type = Double::class) { control -> DoubleControl(control = control) }
+    Control(type = Float::class) { control -> FloatControl(control = control) }
+    Control(type = Int::class) { control -> IntControl(control = control) }
     Control(type = String::class) { control -> StringControl(control = control) }
 }
 
@@ -137,78 +140,95 @@ private fun getDefaultDarkTheme(defaultComponentDarkTheme: Boolean?): Boolean {
  */
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun Manuscript(darkTheme: Boolean? = null, block: @Composable ManuscriptScope.() -> Unit) {
-    val scope = remember { object : ManuscriptScope {} }
-    val data = LocalManuscriptData.current
+fun InternalManuscriptScope.Manuscript(
+    darkTheme: Boolean? = null,
+    block: @Composable ManuscriptScope.() -> Unit,
+) {
+    CompositionLocalProvider(LocalManuscriptData provides ManuscriptData()) {
+        val scope = remember { object : ManuscriptScope {} }
+        val data = LocalManuscriptData.current
 
-    with(scope) { RegisterControls() }
+        with(scope) { RegisterDefaultControls() }
 
-    block(scope)
+        block(scope)
 
-    if (LocalInspectionMode.current) {
-        PreviewModeManuscript(variants = data.variants)
-        return
-    }
+        if (LocalInspectionMode.current) {
+            PreviewModeManuscript(variants = data.variants)
+            return@CompositionLocalProvider
+        }
 
-    val manuscriptLibraryData = LocalManuscriptLibraryData.current
-    BackPressHandler { manuscriptLibraryData.onComponentSelected(null) }
+        val manuscriptLibraryData = LocalManuscriptLibraryData.current
+        BackPressHandler { manuscriptLibraryData.onComponentSelected(null) }
 
-    val scaffoldState = rememberBottomSheetScaffoldState(
-        bottomSheetState = BottomSheetState(BottomSheetValue.Collapsed),
-    )
-    val initialDarkTheme = getDefaultDarkTheme(defaultComponentDarkTheme = darkTheme)
-    var isComponentInDarkTheme by remember { mutableStateOf(initialDarkTheme) }
-    val backgroundColour = when {
-        isComponentInDarkTheme -> DarkColours.background
-        else -> LightColours.background
-    }
-    ManuscriptTheme {
-        CompositionLocalProvider(
-            LocalManuscriptComponentTheme provides ManuscriptComponentTheme(
-                isDarkTheme = isComponentInDarkTheme,
-            ),
-        ) {
-            BottomSheetScaffold(
-                scaffoldState = scaffoldState,
-                backgroundColor = backgroundColour,
-                topBar = {
-                    ManuscriptTopAppBar(
-                        onBackPressed = {
-                            manuscriptLibraryData.onComponentSelected(null)
-                        },
-                        onDarkThemeChange = { updatedDarkTheme ->
-                            isComponentInDarkTheme = updatedDarkTheme
-                        },
-                    )
-                },
-                sheetPeekHeight = getBottomSheetPeekHeight(),
-                sheetShape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
-                sheetContent = {
-                    val actions by data.actions.collectAsState()
-                    BottomSheet(
-                        controls = data.controls,
-                        actions = actions,
-                        bottomSheetState = scaffoldState.bottomSheetState,
-                    )
-                },
-            ) { paddingValues ->
-                Column(
-                    modifier = Modifier
-                        .padding(paddingValues)
-                        .fillMaxSize(),
-                ) {
-                    var selectedVariantIndex by remember { mutableStateOf(0) }
-                    ManuscriptTabs(
-                        variants = data.variants,
-                        selectedVariantIndex = selectedVariantIndex,
-                        onVariantSelected = { variantIndex -> selectedVariantIndex = variantIndex },
-                    )
-                    ComponentWrapper(bottomSheetState = scaffoldState.bottomSheetState) {
-                        data.variants[selectedVariantIndex].block()
+        val scaffoldState = rememberBottomSheetScaffoldState(
+            bottomSheetState = BottomSheetState(BottomSheetValue.Collapsed),
+        )
+        val initialDarkTheme = getDefaultDarkTheme(defaultComponentDarkTheme = darkTheme)
+        var isComponentInDarkTheme by remember { mutableStateOf(initialDarkTheme) }
+        val backgroundColour = when {
+            isComponentInDarkTheme -> DarkColours.background
+            else -> LightColours.background
+        }
+        ManuscriptTheme {
+            CompositionLocalProvider(
+                LocalManuscriptComponentTheme provides ManuscriptComponentTheme(
+                    isDarkTheme = isComponentInDarkTheme,
+                ),
+            ) {
+                BottomSheetScaffold(
+                    scaffoldState = scaffoldState,
+                    backgroundColor = backgroundColour,
+                    topBar = {
+                        ManuscriptTopAppBar(
+                            onBackPressed = {
+                                manuscriptLibraryData.onComponentSelected(null)
+                            },
+                            onDarkThemeChange = { updatedDarkTheme ->
+                                isComponentInDarkTheme = updatedDarkTheme
+                            },
+                        )
+                    },
+                    sheetPeekHeight = getBottomSheetPeekHeight(),
+                    sheetShape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
+                    sheetContent = {
+                        val actions by data.actions.collectAsState()
+                        BottomSheet(
+                            controls = data.controls,
+                            actions = actions,
+                            bottomSheetState = scaffoldState.bottomSheetState,
+                        )
+                    },
+                ) { paddingValues ->
+                    Column(
+                        modifier = Modifier
+                            .padding(paddingValues)
+                            .fillMaxSize(),
+                    ) {
+                        var selectedVariantIndex by remember { mutableStateOf(0) }
+                        ManuscriptTabs(
+                            variants = data.variants,
+                            selectedVariantIndex = selectedVariantIndex,
+                            onVariantSelected = { variantIndex ->
+                                selectedVariantIndex = variantIndex
+                            },
+                        )
+                        ComponentWrapper(bottomSheetState = scaffoldState.bottomSheetState) {
+                            data.variants[selectedVariantIndex].block()
+                        }
                     }
                 }
             }
         }
+    }
+}
+
+@Composable
+fun Manuscript(darkTheme: Boolean? = null, block: @Composable ManuscriptScope.() -> Unit) {
+    with(object : InternalManuscriptScope {}) {
+        Manuscript(
+            darkTheme = darkTheme,
+            block = block,
+        )
     }
 }
 
