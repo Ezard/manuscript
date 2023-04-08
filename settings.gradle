@@ -13,5 +13,6 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "Manuscript"
+include ':annotations'
 include ':app'
 include ':manuscript'
