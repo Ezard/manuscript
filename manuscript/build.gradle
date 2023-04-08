@@ -1,4 +1,3 @@
-import com.vanniktech.maven.publish.SonatypeHost
 import org.jetbrains.dokka.gradle.DokkaTask
 
 plugins {
@@ -40,48 +39,6 @@ android {
     publishing {
         multipleVariants {
             allVariants()
-        }
-    }
-}
-
-static def getVersion() {
-    // Unix
-    def result = "git describe --tags --abbrev=0".execute().text.trim()
-    // Windows
-    if (result.empty) result = "PowerShell -Command git describe --tags --abbrev=0".execute().text.trim()
-    // Git isn't installed, or there are no tags
-    if (result.empty) result = "0.0.0"
-    return result
-}
-
-mavenPublishing {
-    coordinates("io.ezard.manuscript", "manuscript", getVersion())
-    publishToMavenCentral(SonatypeHost.S01)
-    signAllPublications()
-
-    pom {
-        name = "Manuscript"
-        description = "Component library creator for Jetpack Compose"
-        inceptionYear = "2022"
-        url = "https://github.com/Ezard/manuscript"
-        licenses {
-            license {
-                name = "The Apache License, Version 2.0"
-                url = "http://www.apache.org/licenses/LICENSE-2.0.txt"
-                distribution = "http://www.apache.org/licenses/LICENSE-2.0.txt"
-            }
-        }
-        developers {
-            developer {
-                id = "ezard"
-                name = "Ben Ezard"
-                url = "https://github.com/Ezard"
-            }
-        }
-        scm {
-            url = "https://github.com/Ezard/manuscript"
-            connection = "scm:git:git://github.com/Ezard/manuscript.git"
-            developerConnection = "scm:git:ssh://git@github.com/Ezard/manuscript.git"
         }
     }
 }

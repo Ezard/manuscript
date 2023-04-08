@@ -20,3 +20,9 @@ plugins {
     id 'org.jetbrains.kotlin.jvm' version "$kotlin_version" apply false
     id 'com.google.devtools.ksp' version "$ksp_version" apply false
 }
+
+subprojects {
+    pluginManager.withPlugin("com.vanniktech.maven.publish") {
+        apply from: '../gradle/scripts/publishing.gradle'
+    }
+}
