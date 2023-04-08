@@ -5,11 +5,9 @@ import androidx.compose.runtime.Composable
 
 @Composable
 internal fun BooleanControl(control: Control<Boolean>) {
-    Control(control = control) {
-        var checked by control
-        Switch(
-            checked = checked,
-            onCheckedChange = { checked = it },
-        )
-    }
+    var checked by control
+    Switch(
+        checked = checked,
+        onCheckedChange = { checked = it },
+    )
 }

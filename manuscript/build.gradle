@@ -1,9 +1,9 @@
 import org.jetbrains.dokka.gradle.DokkaTask
-import com.vanniktech.maven.publish.SonatypeHost
 
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
+    id 'com.google.devtools.ksp'
     id 'org.jetbrains.dokka'
     id 'com.vanniktech.maven.publish'
 }
@@ -33,7 +33,7 @@ android {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion '1.4.0'
+        kotlinCompilerExtensionVersion "$compose_compiler_version"
     }
 
     publishing {
@@ -43,49 +43,9 @@ android {
     }
 }
 
-static def getVersion() {
-    // Unix
-    def result = "git describe --tags --abbrev=0".execute().text.trim()
-    // Windows
-    if (result.empty) result = "PowerShell -Command git describe --tags --abbrev=0".execute().text.trim()
-    // Git isn't installed, or there are no tags
-    if (result.empty) result = "0.0.0"
-    return result
-}
-
-mavenPublishing {
-    coordinates("io.ezard.manuscript", "manuscript", getVersion())
-    publishToMavenCentral(SonatypeHost.S01)
-    signAllPublications()
-
-    pom {
-        name = "Manuscript"
-        description = "Component library creator for Jetpack Compose"
-        inceptionYear = "2022"
-        url = "https://github.com/Ezard/manuscript"
-        licenses {
-            license {
-                name = "The Apache License, Version 2.0"
-                url = "http://www.apache.org/licenses/LICENSE-2.0.txt"
-                distribution = "http://www.apache.org/licenses/LICENSE-2.0.txt"
-            }
-        }
-        developers {
-            developer {
-                id = "ezard"
-                name = "Ben Ezard"
-                url = "https://github.com/Ezard"
-            }
-        }
-        scm {
-            url = "https://github.com/Ezard/manuscript"
-            connection = "scm:git:git://github.com/Ezard/manuscript.git"
-            developerConnection = "scm:git:ssh://git@github.com/Ezard/manuscript.git"
-        }
-    }
-}
-
 dependencies {
+    api project(':annotations')
+    ksp project(':ksp')
     implementation 'androidx.activity:activity-compose:1.7.0'
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.2'
     implementation "androidx.compose.ui:ui:$compose_version"

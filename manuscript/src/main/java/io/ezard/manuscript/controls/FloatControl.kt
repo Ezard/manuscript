@@ -7,12 +7,10 @@ import androidx.compose.ui.text.input.KeyboardType
 
 @Composable
 internal fun FloatControl(control: Control<Float>) {
-    Control(control = control) {
-        var number by control
-        TextField(
-            value = number.toString(),
-            onValueChange = { number = it.toFloatOrNull() ?: 0f },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-        )
-    }
+    var number by control
+    TextField(
+        value = number.toString(),
+        onValueChange = { number = it.toFloatOrNull() ?: 0f },
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+    )
 }
