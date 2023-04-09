@@ -19,13 +19,13 @@ fun ButtonManuscript() {
 
         // set up 1 or more variants of the component
         Variant(name = "Red") {
-            RedButton(text = text, onClick = { onClick.trigger() })
+            RedButton(text = text, onClick = onClick::trigger)
         }
         Variant(name = "Green") {
-            GreenButton(text = text, onClick = { onClick.trigger() })
+            GreenButton(text = text, onClick = onClick::trigger)
         }
         Variant(name = "Blue") {
-            BlueButton(text = text, onClick = { onClick.trigger() })
+            BlueButton(text = text, onClick = onClick::trigger)
         }
     }
 }
