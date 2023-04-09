@@ -30,7 +30,7 @@ android {
     }
     @Suppress("UnstableApiUsage")
     composeOptions {
-        kotlinCompilerExtensionVersion = "${libs.versions.composeCompiler}"
+        kotlinCompilerExtensionVersion = libs.versions.composeCompiler.get()
     }
 
     publishing {
