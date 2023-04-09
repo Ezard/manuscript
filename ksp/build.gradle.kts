@@ -9,6 +9,10 @@ java {
     targetCompatibility = JavaVersion.VERSION_11
 }
 
+mavenPublishing {
+    signAllPublications()
+}
+
 dependencies {
     implementation(project(":annotations"))
     implementation(libs.ksp.symbolProcessingApi)
