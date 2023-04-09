@@ -6,6 +6,9 @@ import com.google.devtools.ksp.processing.SymbolProcessorEnvironment
 class ManuscriptGenerator(
     private val environment: SymbolProcessorEnvironment,
 ) {
+    companion object {
+        private const val PACKAGE_NAME = "io.ezard.manuscript.manuscript"
+    }
 
     fun generate(controls: List<ControlData>) {
         val controlStatements = controls
@@ -13,6 +16,8 @@ class ManuscriptGenerator(
                 "Control(type = ${control.type}::class) { control -> ${control.function}(control = control) }"
             }
         val code = """
+            package $PACKAGE_NAME
+
             import androidx.compose.runtime.Composable
             import io.ezard.manuscript.controls.*
             import io.ezard.manuscript.manuscript.InternalManuscriptScope
@@ -35,7 +40,7 @@ class ManuscriptGenerator(
         environment.codeGenerator
             .createNewFile(
                 dependencies = Dependencies(aggregating = true, sources = sources),
-                packageName = "io.ezard.manuscript.manuscript",
+                packageName = PACKAGE_NAME,
                 fileName = "Manuscript",
             )
             .writer()
