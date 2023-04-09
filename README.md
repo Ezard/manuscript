@@ -12,8 +12,10 @@
 
 Simply add the dependency to your `build.gradle(.kts) file: ![Maven Central](https://img.shields.io/maven-central/v/io.ezard.manuscript/manuscript)
 
-`implementation("io.ezard.manuscript:manuscript:<latest-version>")`
-`ksp("io.ezard.manuscript:ksp:<latest-version>")`
+```kotlin
+implementation("io.ezard.manuscript:manuscript:<latest-version>")
+ksp("io.ezard.manuscript:ksp:<latest-version>")
+```
 
 ## Documentation
 
