@@ -19,7 +19,7 @@ ksp("io.ezard.manuscript:ksp:<latest-version>")
 
 ## Documentation
 
-Docs can be found here: https://ezard.github.io/manuscript/
+API docs can be found here: https://ezard.github.io/manuscript/
 
 ## Usage
 
