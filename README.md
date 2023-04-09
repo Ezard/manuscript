@@ -1,12 +1,8 @@
-<h1 align="center">
-	Manuscript
-</h1>
-<h2 align="center">
-	Frontend workshop / component library for Jetpack Compose
-</h2>
-<p align="center">
-	Heavily inspired by the excellent <a href="https://github.com/storybookjs/storybook">Storybook</a>
-</p>
+# Manuscript
+
+Frontend workshop / component library for Jetpack Compose
+
+Heavily inspired by the excellent <a href="https://github.com/storybookjs/storybook">Storybook</a>
 
 ![Maven Central](https://img.shields.io/maven-central/v/io.ezard.manuscript/manuscript) 
 
