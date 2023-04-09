@@ -1,64 +1,106 @@
-<h1 align="center">
-	Manuscript
-</h1>
-<h2 align="center">
-	Frontend workshop / component library for Jetpack Compose
-</h2>
-<p align="center">
-	Heavily inspired by the excellent <a href="https://github.com/storybookjs/storybook">Storybook</a>
-</p>
+# Manuscript
+
+Frontend workshop / component library for Jetpack Compose
+
+Heavily inspired by the excellent <a href="https://github.com/storybookjs/storybook">Storybook</a>
+
+![Maven Central](https://img.shields.io/maven-central/v/io.ezard.manuscript/manuscript) 
 
 ## Getting Started
 
-Simply add the dependency to your `build.gradle(.kts) file: ![Maven Central](https://img.shields.io/maven-central/v/io.ezard.manuscript/manuscript)
+Simply add the dependency to your `build.gradle(.kts) file:
 
-`implementation("io.ezard.manuscript:manuscript:<latest-version>")`
-`ksp("io.ezard.manuscript:ksp:<latest-version>")`
+```kotlin
+implementation("io.ezard.manuscript:manuscript:<latest-version>")
+ksp("io.ezard.manuscript:ksp:<latest-version>")
+```
 
 ## Documentation
 
-Docs can be found here: https://ezard.github.io/manuscript/
+API docs can be found here: https://ezard.github.io/manuscript/
 
 ## Usage
 
 ### Components
 
+Components are the core focus of Manuscript
+
+Set up a component by using the `Manuscript` composable
+
+#### Variants
+
+Variants allow you to group together closely-related components that share the same data; usually this is things like buttons of different colours, horizontal/vertical versions of a card, etc
+
+Set up a variant by using the `Variant` function within a `Manuscript` context
+
+Note: your own component must be inside `Variant`, even if there's only 1 variant
+
+e.g.
+```kotlin
+Manuscript {
+    Variant(name = "Red") {
+        RedButton()
+    }
+    Variant(name = "Green") {
+        GreenButton()
+    }
+}
+```
+
+#### Controls
+
+Controls allow you to update, in realtime, the data that your component is using
+
+Set up a control by using the `control` function within a `Manuscript` context
+
+Hint: use `val myControl by control(...)` instead of `val myControl = control(...)` for better ergonomics!
+
+e.g.
+```kotlin
+Manuscript {
+    val text by control(name = "Text", defaultValue = "Click me!")
+}
+```
+
+#### Actions
+
+Actions allow you to see when certain interactions with your component occur
+
+Set up an action by using the `action` function within a `Manuscript` context
+
+Trigger the action by calling the `trigger()` function on the action
+
+e.g.
+```kotlin
+Manuscript {
+    val onClick = action(name = "onClick")
+    
+    Variant(name = "Default") {
+        Button(onClick = { onClick.trigger() })
+    }
+}
+```
+
+#### Full Example
+
 ```kotlin
 @Composable
-fun Button(text: String, colour: Color, enabled: Boolean, onClick: () -> Unit = {}) {
-    Text(
-        text = text,
-        modifier = Modifier
-            .background(colour.copy(alpha = if (enabled) 1f else 0.5f))
-            .padding(16.dp)
-            .clickable(enabled = enabled, onClick = onClick),
-    )
-}
-
-@Preview
-@Composable
-fun ButtonPreview() {
+fun ButtonManuscript() {
     Manuscript {
-        val text1 by control("Text", "Foo")
-        val text2 by control(name = "Nullable thing", defaultValue = "Bar")
-        val text2Null by control(name = "Is Nullable thing null", defaultValue = false)
+        val text by control("Text", "Click me!")
         val onClick = action(name = "onClick")
 
-        val combinedText = "$text1 ${if (text2Null) "<null>" else text2}"
-
-        variant("Red") {
+        Variant("Red") {
             Button(
-                text = combinedText,
-                colour = Color.Red,
-                enabled = true,
+                text = text,
+                color = Color.Red,
                 onClick = { onClick.trigger() },
             )
         }
-        variant("Green") {
+        Variant("Green") {
             Button(
-                text = combinedText,
-                colour = Color.Green,
-                enabled = true,
+                text = text,
+                color = Color.Green,
                 onClick = { onClick.trigger() },
             )
         }
@@ -68,26 +110,50 @@ fun ButtonPreview() {
 
 ### Library
 
+Manuscript allows you to easily set up a library of components, with optional global defaults for your Manuscript components
+
+Set up a library by using the `ManuscriptLibrary` composable
+
+#### Components
+
+Individual components can be added to the library via the `Component` function
+
+e.g.
 ```kotlin
 ManuscriptLibrary {
-    Group(name = "Buttons") {
-        Component(name = "Rectangular Button") {
-            RectangularButtonPreview()
-        }
-        Component(name = "Circular Button") {
-            CircularButtonPreview()
-        }
+    Component(name = "Button") {
+        ButtonManuscript()
     }
+}
+```
+
+#### Groups
+
+Components can be grouped together in the library via the `Group` function
+
+e.g.
+```kotlin
+ManuscriptLibrary {
     Group(name = "Charts") {
         Component(name = "Bar Chart") {
-            BarChartPreview()
+            BarChartMansucript()
         }
         Component(name = "Line Chart") {
-            LineChartPreview()
+            LineChartManuscript()
         }
         Component(name = "Pie Chart") {
-            PieChartPreview()
+            PieChartManuscript()
         }
     }
 }
 ```
+
+#### Default Dark Theme
+
+By default, Manuscript will use the device settings to determine whether to display a light or dark background
+
+You can override this at the library level by setting the `defaultDarkTheme` of `ManuscriptLibrary` to `true`/`false`
+
+## Alternatives
+
+Don't need the ability to change data on the fly and see actions? Just want an auto-generated component library? [Showkase](https://github.com/airbnb/Showkase) might fit your needs better (or just make use of both libraries!)
