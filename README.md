@@ -23,42 +23,52 @@ API docs can be found here: https://ezard.github.io/manuscript/
 
 ### Components
 
+Components are the core focus of Manuscript
+
+Set up a component by using the `Manuscript` composable
+
+#### Controls
+
+Controls allow you to update, in realtime, the data that your component is using
+
+Set up a control by using the `control` function within a `Manuscript` context
+
+Hint: use `val myControl by control(...)` instead of `val myControl = control(...)` for better ergonomics!
+
+#### Actions
+
+Actions allow you to see when certain interactions with your component occur
+
+Set up an action by using the `action` function within a `Manuscript` context
+
+Trigger the action by calling the `trigger()` function on the action
+
+#### Variants
+
+Variants allow you to group together closely-related components that share the same data; usually this is things like buttons of different colours, horizontal/vertical versions of a card, etc
+
+Set up a variant by using the `Variant` function within a `Manuscript` context
+
+#### Example
+
 ```kotlin
 @Composable
-fun Button(text: String, colour: Color, enabled: Boolean, onClick: () -> Unit = {}) {
-    Text(
-        text = text,
-        modifier = Modifier
-            .background(colour.copy(alpha = if (enabled) 1f else 0.5f))
-            .padding(16.dp)
-            .clickable(enabled = enabled, onClick = onClick),
-    )
-}
-
-@Preview
-@Composable
-fun ButtonPreview() {
+fun ButtonManuscript() {
     Manuscript {
-        val text1 by control("Text", "Foo")
-        val text2 by control(name = "Nullable thing", defaultValue = "Bar")
-        val text2Null by control(name = "Is Nullable thing null", defaultValue = false)
+        val text by control("Text", "Click me!")
         val onClick = action(name = "onClick")
 
-        val combinedText = "$text1 ${if (text2Null) "<null>" else text2}"
-
-        variant("Red") {
+        Variant("Red") {
             Button(
-                text = combinedText,
-                colour = Color.Red,
-                enabled = true,
+                text = text,
+                color = Color.Red,
                 onClick = { onClick.trigger() },
             )
         }
-        variant("Green") {
+        Variant("Green") {
             Button(
-                text = combinedText,
-                colour = Color.Green,
-                enabled = true,
+                text = text,
+                color = Color.Green,
                 onClick = { onClick.trigger() },
             )
         }
