@@ -3,8 +3,8 @@ package io.ezard.manuscript.app
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.ui.graphics.vector.Group
 import io.ezard.manuscript.library.Component
+import io.ezard.manuscript.library.Group
 import io.ezard.manuscript.library.ManuscriptLibrary
 
 class MainActivity : ComponentActivity() {
