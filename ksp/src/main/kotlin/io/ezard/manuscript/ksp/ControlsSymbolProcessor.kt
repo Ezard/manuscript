@@ -2,10 +2,30 @@ package io.ezard.manuscript.ksp
 
 import com.google.devtools.ksp.processing.Resolver
 import com.google.devtools.ksp.processing.SymbolProcessor
+import com.google.devtools.ksp.symbol.FileLocation
 import com.google.devtools.ksp.symbol.KSAnnotated
 import com.google.devtools.ksp.symbol.KSFunctionDeclaration
 import com.google.devtools.ksp.symbol.KSType
 import com.google.devtools.ksp.validate
+
+private fun getFunctionLocation(function: KSFunctionDeclaration): String {
+    val functionName = function.simpleName.asString()
+    val fileName = function.containingFile?.fileName ?: return functionName
+    val lineNumber = (function.location as? FileLocation)?.lineNumber ?: return functionName
+    return "$fileName:$lineNumber"
+}
+
+private fun checkFunctionIsComposable(function: KSFunctionDeclaration): Boolean {
+    val isComposable = function.annotations.any { annotation ->
+        annotation.shortName.asString() == "Composable"
+    }
+    if (isComposable) {
+        return true
+    } else {
+        val functionLocation = getFunctionLocation(function)
+        throw IllegalStateException("Functions annotated with @ManuscriptControl must also be annotated with @Composable ($functionLocation)")
+    }
+}
 
 private fun functionDeclarationToControlData(functionDeclaration: KSFunctionDeclaration): ControlData {
     val typeDeclaration = (functionDeclaration.annotations
@@ -46,6 +66,7 @@ class ControlsSymbolProcessor(
             .toList()
             .filter(KSAnnotated::validate)
             .filterIsInstance<KSFunctionDeclaration>()
+            .filter(::checkFunctionIsComposable)
             .map(::functionDeclarationToControlData)
 
         manuscriptGenerator.generate(controls)
