@@ -27,6 +27,26 @@ Components are the core focus of Manuscript
 
 Set up a component by using the `Manuscript` composable
 
+#### Variants
+
+Variants allow you to group together closely-related components that share the same data; usually this is things like buttons of different colours, horizontal/vertical versions of a card, etc
+
+Set up a variant by using the `Variant` function within a `Manuscript` context
+
+Note: your own component must be inside `Variant`, even if there's only 1 variant
+
+e.g.
+```kotlin
+Manuscript {
+    Variant(name = "Red") {
+        RedButton()
+    }
+    Variant(name = "Green") {
+        GreenButton()
+    }
+}
+```
+
 #### Controls
 
 Controls allow you to update, in realtime, the data that your component is using
@@ -34,6 +54,13 @@ Controls allow you to update, in realtime, the data that your component is using
 Set up a control by using the `control` function within a `Manuscript` context
 
 Hint: use `val myControl by control(...)` instead of `val myControl = control(...)` for better ergonomics!
+
+e.g.
+```kotlin
+Manuscript {
+    val text by control(name = "Text", defaultValue = "Click me!")
+}
+```
 
 #### Actions
 
@@ -43,13 +70,18 @@ Set up an action by using the `action` function within a `Manuscript` context
 
 Trigger the action by calling the `trigger()` function on the action
 
-#### Variants
+e.g.
+```kotlin
+Manuscript {
+    val onClick = action(name = "onClick")
+    
+    Variant(name = "Default") {
+        Button(onClick = { onClick.trigger() })
+    }
+}
+```
 
-Variants allow you to group together closely-related components that share the same data; usually this is things like buttons of different colours, horizontal/vertical versions of a card, etc
-
-Set up a variant by using the `Variant` function within a `Manuscript` context
-
-#### Example
+#### Full Example
 
 ```kotlin
 @Composable
