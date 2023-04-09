@@ -29,7 +29,6 @@ private fun checkFunctionIsComposable(function: KSFunctionDeclaration): Boolean 
 
 private fun functionDeclarationToControlData(functionDeclaration: KSFunctionDeclaration): ControlData {
     val typeDeclaration = (functionDeclaration.annotations
-        .toList()
         .firstOrNull { annotation -> annotation.shortName.asString() == "ManuscriptControl" }
         ?.arguments
         ?.firstOrNull { argument -> argument.name?.asString() == "type" }
