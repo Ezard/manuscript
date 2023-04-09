@@ -6,15 +6,13 @@ import com.google.devtools.ksp.symbol.KSAnnotated
 import com.google.devtools.ksp.symbol.KSFunctionDeclaration
 import com.google.devtools.ksp.symbol.KSType
 import com.google.devtools.ksp.validate
-import io.ezard.manuscript.annotations.ManuscriptControl
 
-private fun functionDeclarationToTypeName(functionDeclaration: KSFunctionDeclaration): ControlData {
-    val annotationSimpleName = ManuscriptControl::class.simpleName
+private fun functionDeclarationToControlData(functionDeclaration: KSFunctionDeclaration): ControlData {
     val typeDeclaration = (functionDeclaration.annotations
         .toList()
-        .firstOrNull { annotation -> annotation.shortName.asString() == annotationSimpleName }
+        .firstOrNull { annotation -> annotation.shortName.asString() == "ManuscriptControl" }
         ?.arguments
-        ?.firstOrNull { argument -> argument.name?.asString() == ManuscriptControl::type.name }
+        ?.firstOrNull { argument -> argument.name?.asString() == "type" }
         ?.value as? KSType)
         ?.declaration
         ?: throw Exception()
@@ -43,14 +41,12 @@ class ControlsSymbolProcessor(
             invoked = true
         }
 
-        val annotationName = ManuscriptControl::class.qualifiedName ?: return emptyList()
-
         val controls = resolver
-            .getSymbolsWithAnnotation(annotationName)
+            .getSymbolsWithAnnotation("io.ezard.manuscript.annotations.ManuscriptControl")
             .toList()
             .filter(KSAnnotated::validate)
             .filterIsInstance<KSFunctionDeclaration>()
-            .map(::functionDeclarationToTypeName)
+            .map(::functionDeclarationToControlData)
 
         manuscriptGenerator.generate(controls)
 
