@@ -22,7 +22,6 @@ android {
     }
     kotlinOptions {
         jvmTarget = "11"
-        freeCompilerArgs = listOf("-Xcontext-receivers")
     }
     @Suppress("UnstableApiUsage")
     buildFeatures {
