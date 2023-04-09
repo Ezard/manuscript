@@ -223,7 +223,7 @@ fun InternalManuscriptScope.Manuscript(
 }
 
 @Composable
-fun Manuscript(darkTheme: Boolean? = null, block: @Composable ManuscriptScope.() -> Unit) {
+internal fun Manuscript(darkTheme: Boolean? = null, block: @Composable ManuscriptScope.() -> Unit) {
     with(object : InternalManuscriptScope {}) {
         Manuscript(
             darkTheme = darkTheme,
