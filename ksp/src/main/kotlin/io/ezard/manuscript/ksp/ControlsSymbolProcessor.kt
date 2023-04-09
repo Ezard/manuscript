@@ -27,24 +27,21 @@ private fun checkFunctionIsComposable(function: KSFunctionDeclaration): Boolean 
     }
 }
 
-private fun functionDeclarationToControlData(functionDeclaration: KSFunctionDeclaration): ControlData {
-    val typeDeclaration = (functionDeclaration.annotations
-        .firstOrNull { annotation -> annotation.shortName.asString() == "ManuscriptControl" }
-        ?.arguments
-        ?.firstOrNull { argument -> argument.name?.asString() == "type" }
+private fun functionDeclarationToControlData(function: KSFunctionDeclaration): ControlData {
+    val annotation = function.annotations.firstOrNull { annotation ->
+        annotation.shortName.asString() == "ManuscriptControl"
+    } ?: throw Exception()
+    val type = (annotation.arguments
+        .firstOrNull { argument -> argument.name?.asString() == "type" }
         ?.value as? KSType)
         ?.declaration
         ?: throw Exception()
 
-    val file = functionDeclaration.containingFile
-    val type =
-        "${typeDeclaration.packageName.asString()}.${typeDeclaration.simpleName.asString()}"
-    val function =
-        "${functionDeclaration.packageName.asString()}.${functionDeclaration.simpleName.asString()}"
+    val file = function.containingFile
     return ControlData(
         file = file,
-        type = type,
-        function = function,
+        type = type.qualifiedName?.asString().orEmpty(),
+        function = function.qualifiedName?.asString().orEmpty(),
     )
 }
 
