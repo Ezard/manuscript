@@ -4,7 +4,6 @@ import org.jetbrains.dokka.gradle.DokkaTask
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.ksp)
     alias(libs.plugins.dokka)
     alias(libs.plugins.maven.publish)
 }
@@ -47,7 +46,6 @@ mavenPublishing {
 
 dependencies {
     api(project(":annotations"))
-    ksp(project(":ksp"))
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.activity.ktx)
     coreLibraryDesugaring(libs.android.tools.desugar)
