@@ -5,6 +5,8 @@ pluginManagement {
         mavenCentral()
     }
 }
+
+@Suppress("UnstableApiUsage")
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
@@ -13,7 +15,7 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "Manuscript"
-include ':annotations'
-include ':app'
-include ':ksp'
-include ':manuscript'
+include(":annotations")
+include(":app")
+include(":ksp")
+include(":manuscript")
