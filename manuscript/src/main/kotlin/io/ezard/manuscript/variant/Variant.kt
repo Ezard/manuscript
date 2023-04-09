@@ -24,9 +24,8 @@ internal class Variant(
  *
  * @sample [io.ezard.manuscript.variant.VariantSample]
  */
-context(ManuscriptScope)
 @Composable
-fun Variant(name: String, block: @Composable () -> Unit) {
+fun ManuscriptScope.Variant(name: String, block: @Composable () -> Unit) {
     LocalManuscriptData.current.registerVariant(name, block)
 }
 

@@ -26,7 +26,6 @@ class Action(
     /**
      * Trigger an instance of this action to appear in the "Actions" section of Manuscript's bottom sheet
      */
-    context(ManuscriptScope)
     fun trigger() {
         onTrigger(this)
     }
@@ -41,9 +40,8 @@ class Action(
  *
  * @sample [io.ezard.manuscript.actions.ActionSample]
  */
-context(ManuscriptScope)
 @Composable
-fun action(name: String): Action {
+fun ManuscriptScope.action(name: String): Action {
     val data = LocalManuscriptData.current
     return Action(name = name, onTrigger = data::triggerAction)
 }
