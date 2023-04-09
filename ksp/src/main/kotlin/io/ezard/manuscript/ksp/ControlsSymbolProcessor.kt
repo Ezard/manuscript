@@ -27,6 +27,21 @@ private fun checkFunctionIsComposable(function: KSFunctionDeclaration): Boolean 
     }
 }
 
+private fun checkFunctionHasControlParameter(function: KSFunctionDeclaration): Boolean {
+    val baseMessage =
+        "Functions annotated with @ManuscriptControl must have a single parameter, called 'control', of type io.ezard.manuscript.controls.Control"
+    val functionLocation = getFunctionLocation(function)
+    when {
+        function.parameters.isEmpty() -> throw IllegalStateException("$baseMessage: this function has zero parameters ($functionLocation)")
+        function.parameters.size > 1 -> throw IllegalStateException("$baseMessage: this function has more than 1 parameter ($functionLocation)")
+        function.parameters.first().name?.asString() != "control" -> throw IllegalStateException("$baseMessage: this function's parameter is not called 'control' ($functionLocation)")
+        function.parameters.first().type.resolve().declaration.qualifiedName?.asString() != "io.ezard.manuscript.controls.Control" -> throw IllegalStateException(
+            "$baseMessage: this function's parameter is not of type io.ezard.manuscript.controls.Control ($functionLocation)",
+        )
+        else -> return true
+    }
+}
+
 private fun functionDeclarationToControlData(function: KSFunctionDeclaration): ControlData {
     val annotation = function.annotations.firstOrNull { annotation ->
         annotation.shortName.asString() == "ManuscriptControl"
@@ -60,10 +75,13 @@ class ControlsSymbolProcessor(
         val controls = resolver
             .getSymbolsWithAnnotation("io.ezard.manuscript.annotations.ManuscriptControl")
             .toList()
+            .asSequence()
             .filter(KSAnnotated::validate)
             .filterIsInstance<KSFunctionDeclaration>()
             .filter(::checkFunctionIsComposable)
+            .filter(::checkFunctionHasControlParameter)
             .map(::functionDeclarationToControlData)
+            .toList()
 
         manuscriptGenerator.generate(controls)
 
