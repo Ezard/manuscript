@@ -8,9 +8,11 @@
 	Heavily inspired by the excellent <a href="https://github.com/storybookjs/storybook">Storybook</a>
 </p>
 
+![Maven Central](https://img.shields.io/maven-central/v/io.ezard.manuscript/manuscript) 
+
 ## Getting Started
 
-Simply add the dependency to your `build.gradle(.kts) file: ![Maven Central](https://img.shields.io/maven-central/v/io.ezard.manuscript/manuscript)
+Simply add the dependency to your `build.gradle(.kts) file:
 
 ```kotlin
 implementation("io.ezard.manuscript:manuscript:<latest-version>")
