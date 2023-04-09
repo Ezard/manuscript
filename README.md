@@ -78,29 +78,49 @@ fun ButtonManuscript() {
 
 ### Library
 
+Manuscript allows you to easily set up a library of components, with optional global defaults for your Manuscript components
+
+Set up a library by using the `ManuscriptLibrary` composable
+
+#### Components
+
+Individual components can be added to the library via the `Component` function
+
+e.g.
 ```kotlin
 ManuscriptLibrary {
-    Group(name = "Buttons") {
-        Component(name = "Rectangular Button") {
-            RectangularButtonPreview()
-        }
-        Component(name = "Circular Button") {
-            CircularButtonPreview()
-        }
+    Component(name = "Button") {
+        ButtonManuscript()
     }
+}
+```
+
+#### Groups
+
+Components can be grouped together in the library via the `Group` function
+
+e.g.
+```kotlin
+ManuscriptLibrary {
     Group(name = "Charts") {
         Component(name = "Bar Chart") {
-            BarChartPreview()
+            BarChartMansucript()
         }
         Component(name = "Line Chart") {
-            LineChartPreview()
+            LineChartManuscript()
         }
         Component(name = "Pie Chart") {
-            PieChartPreview()
+            PieChartManuscript()
         }
     }
 }
 ```
+
+#### Default Dark Theme
+
+By default, Manuscript will use the device settings to determine whether to display a light or dark background
+
+You can override this at the library level by setting the `defaultDarkTheme` of `ManuscriptLibrary` to `true`/`false`
 
 ## Alternatives
 
