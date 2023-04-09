@@ -134,9 +134,8 @@ private fun CustomControlSample() {
  *
  * @sample [io.ezard.manuscript.controls.ControlSample]
  */
-context(ManuscriptScope)
 @Composable
-fun <T> control(name: String, defaultValue: T): Control<T> {
+fun <T> ManuscriptScope.control(name: String, defaultValue: T): Control<T> {
     val state = remember { mutableStateOf(defaultValue) }
     val data = LocalManuscriptData.current
     return remember {
