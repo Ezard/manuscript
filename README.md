@@ -96,4 +96,4 @@ ManuscriptLibrary {
 
 ## Alternatives
 
-Don't need the ability to change data on the fly and see actions? Just want an auto-generated component library? [Showkase](https://github.com/airbnb/Showkase) might fit your needs better!
+Don't need the ability to change data on the fly and see actions? Just want an auto-generated component library? [Showkase](https://github.com/airbnb/Showkase) might fit your needs better (or just make use of both libraries!)
