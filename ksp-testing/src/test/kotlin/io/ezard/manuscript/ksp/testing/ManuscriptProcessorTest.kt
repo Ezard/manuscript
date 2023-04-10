@@ -68,7 +68,7 @@ class ManuscriptProcessorTest {
                     directory,
                     compilation.kspSourcesDir.toPath().resolve("kotlin"),
                 )
-                val expectedError = getExpectedError(directory)
+                val expectedError = getExpectedError(directory)?.trim()
 
                 val result = compilation.compile()
 
@@ -82,10 +82,13 @@ class ManuscriptProcessorTest {
                     }
                 } else {
                     assertEquals(ExitCode.COMPILATION_ERROR, result.exitCode)
-                    val errorMessagePrinted = result.messages.lines().any { line ->
-                        line.contains("io.ezard.manuscript.ksp.ManuscriptCodeGenException: The class passed to @ManuscriptControl must match the type passed as the generic to the Control parameter (StringControl.kt:9)")
-                    }
-                    assertTrue(errorMessagePrinted)
+                    val error = result.messages
+                        .lines()
+                        .firstOrNull { line -> line.contains("ManuscriptCodeGenException") }
+                        ?.split("ManuscriptCodeGenException: ")
+                        ?.last()
+                    assertNotNull(error)
+                    assertEquals(expectedError, error)
                 }
             }
         }.toList()
