@@ -42,7 +42,7 @@ private fun checkFunctionHasControlParameter(function: KSFunctionDeclaration): B
     }
 }
 
-private fun functionDeclarationToControlData(function: KSFunctionDeclaration): ControlData {
+private fun getAnnotationTypeParameterFullyQualifiedName(function: KSFunctionDeclaration): String {
     val annotation = function.annotations.firstOrNull { annotation ->
         annotation.shortName.asString() == "ManuscriptControl"
     } ?: throw Exception()
@@ -51,11 +51,40 @@ private fun functionDeclarationToControlData(function: KSFunctionDeclaration): C
         ?.value as? KSType)
         ?.declaration
         ?: throw Exception()
+    return type.qualifiedName?.asString().orEmpty()
+}
+
+private fun getControlParameterGenericTypeFullyQualifiedName(function: KSFunctionDeclaration): String {
+    val parameter = function.parameters.first().type.resolve()
+    return parameter
+        .arguments
+        .first()
+        .type
+        ?.resolve()
+        ?.declaration
+        ?.qualifiedName
+        ?.asString()
+        .orEmpty()
+}
+
+private fun checkControlTypesMatch(function: KSFunctionDeclaration): Boolean {
+    val annotationType = getAnnotationTypeParameterFullyQualifiedName(function)
+    val parameterType = getControlParameterGenericTypeFullyQualifiedName(function)
+    if (annotationType == parameterType) {
+        return true
+    } else {
+        val functionLocation = getFunctionLocation(function)
+        throw IllegalStateException("The class passed to @ManuscriptControl must match the type passed as the generic to the Control parameter ($functionLocation)")
+    }
+}
+
+private fun functionDeclarationToControlData(function: KSFunctionDeclaration): ControlData {
+    val type = getAnnotationTypeParameterFullyQualifiedName(function)
 
     val file = function.containingFile
     return ControlData(
         file = file,
-        type = type.qualifiedName?.asString().orEmpty(),
+        type = type,
         function = function.qualifiedName?.asString().orEmpty(),
     )
 }
@@ -80,6 +109,7 @@ class ControlsSymbolProcessor(
             .filterIsInstance<KSFunctionDeclaration>()
             .filter(::checkFunctionIsComposable)
             .filter(::checkFunctionHasControlParameter)
+            .filter(::checkControlTypesMatch)
             .map(::functionDeclarationToControlData)
             .toList()
 
