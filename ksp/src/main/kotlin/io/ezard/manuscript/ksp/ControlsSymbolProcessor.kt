@@ -46,14 +46,13 @@ private fun checkFunctionHasControlParameter(function: KSFunctionDeclaration): B
 }
 
 private fun getAnnotationTypeParameterFullyQualifiedName(function: KSFunctionDeclaration): String {
-    val annotation = function.annotations.firstOrNull { annotation ->
+    val annotation = function.annotations.first { annotation ->
         annotation.shortName.asString() == "ManuscriptControl"
-    } ?: throw Exception()
+    }
     val type = (annotation.arguments
-        .firstOrNull { argument -> argument.name?.asString() == "type" }
-        ?.value as? KSType)
-        ?.declaration
-        ?: throw Exception()
+        .first { argument -> argument.name?.asString() == "type" }
+        .value as KSType)
+        .declaration
     return type.qualifiedName?.asString().orEmpty()
 }
 
