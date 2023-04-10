@@ -1,0 +1,1 @@
+Functions annotated with @ManuscriptControl must have a single parameter, called 'control', of type io.ezard.manuscript.controls.Control: this function has zero parameters (StringControl.kt:8)

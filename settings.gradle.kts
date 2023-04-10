@@ -18,4 +18,5 @@ rootProject.name = "Manuscript"
 include(":annotations")
 include(":app")
 include(":ksp")
+include(":ksp-testing")
 include(":manuscript")
