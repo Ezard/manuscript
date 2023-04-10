@@ -14,6 +14,5 @@ mavenPublishing {
 }
 
 dependencies {
-    implementation(project(":annotations"))
     implementation(libs.ksp.symbolProcessingApi)
 }
