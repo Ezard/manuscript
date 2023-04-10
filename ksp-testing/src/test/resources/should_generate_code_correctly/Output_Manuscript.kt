@@ -2,8 +2,6 @@ package io.ezard.manuscript.manuscript
 
 import androidx.compose.runtime.Composable
 import io.ezard.manuscript.controls.*
-import io.ezard.manuscript.manuscript.InternalManuscriptScope
-import io.ezard.manuscript.manuscript.ManuscriptScope
 
 @Composable
 fun Manuscript(darkTheme: Boolean? = null, block: @Composable ManuscriptScope.() -> Unit) {
