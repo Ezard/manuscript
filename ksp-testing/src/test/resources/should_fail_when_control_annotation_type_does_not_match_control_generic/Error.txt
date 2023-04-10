@@ -1,0 +1,1 @@
+The class passed to @ManuscriptControl must match the type passed as the generic to the Control parameter (StringControl.kt:9)

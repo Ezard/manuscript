@@ -1,0 +1,1 @@
+Functions annotated with @ManuscriptControl must also be annotated with @Composable (StringControl.kt:7)
