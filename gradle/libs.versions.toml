@@ -13,6 +13,7 @@ android-library = { id = "com.android.library", version.ref = "androidGradlePlug
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+kover = { id = "org.jetbrains.kotlinx.kover", version = "0.6.1" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "kotlin" }
 maven-publish = { id = "com.vanniktech.maven.publish", version = "0.25.1" }
 

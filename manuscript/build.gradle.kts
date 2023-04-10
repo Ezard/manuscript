@@ -4,6 +4,7 @@ import org.jetbrains.dokka.gradle.DokkaTask
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kover)
     alias(libs.plugins.dokka)
     alias(libs.plugins.maven.publish)
 }

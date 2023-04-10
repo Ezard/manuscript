@@ -9,6 +9,7 @@ plugins {
     alias(libs.plugins.kotlin.android) apply false
     alias(libs.plugins.kotlin.jvm) apply false
     alias(libs.plugins.ksp) apply false
+    alias(libs.plugins.kover)
     alias(libs.plugins.dokka) apply false
     alias(libs.plugins.maven.publish) apply false
 }
@@ -48,4 +49,8 @@ subprojects {
             }
         }
     }
+}
+
+koverMerged {
+    enable()
 }
