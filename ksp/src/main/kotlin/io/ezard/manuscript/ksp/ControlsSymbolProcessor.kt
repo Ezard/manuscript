@@ -2,18 +2,10 @@ package io.ezard.manuscript.ksp
 
 import com.google.devtools.ksp.processing.Resolver
 import com.google.devtools.ksp.processing.SymbolProcessor
-import com.google.devtools.ksp.symbol.FileLocation
 import com.google.devtools.ksp.symbol.KSAnnotated
 import com.google.devtools.ksp.symbol.KSFunctionDeclaration
 import com.google.devtools.ksp.symbol.KSType
 import com.google.devtools.ksp.validate
-
-private fun getFunctionLocation(function: KSFunctionDeclaration): String {
-    val functionName = function.simpleName.asString()
-    val fileName = function.containingFile?.fileName ?: return functionName
-    val lineNumber = (function.location as? FileLocation)?.lineNumber ?: return functionName
-    return "$fileName:$lineNumber"
-}
 
 private fun checkFunctionIsComposable(function: KSFunctionDeclaration): Boolean {
     val isComposable = function.annotations.any { annotation ->
@@ -22,21 +14,32 @@ private fun checkFunctionIsComposable(function: KSFunctionDeclaration): Boolean 
     if (isComposable) {
         return true
     } else {
-        val functionLocation = getFunctionLocation(function)
-        throw IllegalStateException("Functions annotated with @ManuscriptControl must also be annotated with @Composable ($functionLocation)")
+        throw ManuscriptCodeGenException(
+            "Functions annotated with @ManuscriptControl must also be annotated with @Composable",
+            function,
+        )
     }
 }
 
 private fun checkFunctionHasControlParameter(function: KSFunctionDeclaration): Boolean {
     val baseMessage =
         "Functions annotated with @ManuscriptControl must have a single parameter, called 'control', of type io.ezard.manuscript.controls.Control"
-    val functionLocation = getFunctionLocation(function)
     when {
-        function.parameters.isEmpty() -> throw IllegalStateException("$baseMessage: this function has zero parameters ($functionLocation)")
-        function.parameters.size > 1 -> throw IllegalStateException("$baseMessage: this function has more than 1 parameter ($functionLocation)")
-        function.parameters.first().name?.asString() != "control" -> throw IllegalStateException("$baseMessage: this function's parameter is not called 'control' ($functionLocation)")
-        function.parameters.first().type.resolve().declaration.qualifiedName?.asString() != "io.ezard.manuscript.controls.Control" -> throw IllegalStateException(
-            "$baseMessage: this function's parameter is not of type io.ezard.manuscript.controls.Control ($functionLocation)",
+        function.parameters.isEmpty() -> throw ManuscriptCodeGenException(
+            "$baseMessage: this function has zero parameters",
+            function,
+        )
+        function.parameters.size > 1 -> throw ManuscriptCodeGenException(
+            "$baseMessage: this function has more than 1 parameter",
+            function,
+        )
+        function.parameters.first().name?.asString() != "control" -> throw ManuscriptCodeGenException(
+            "$baseMessage: this function's parameter is not called 'control'",
+            function,
+        )
+        function.parameters.first().type.resolve().declaration.qualifiedName?.asString() != "io.ezard.manuscript.controls.Control" -> throw ManuscriptCodeGenException(
+            "$baseMessage: this function's parameter is not of type io.ezard.manuscript.controls.Control",
+            function,
         )
         else -> return true
     }
@@ -73,8 +76,10 @@ private fun checkControlTypesMatch(function: KSFunctionDeclaration): Boolean {
     if (annotationType == parameterType) {
         return true
     } else {
-        val functionLocation = getFunctionLocation(function)
-        throw IllegalStateException("The class passed to @ManuscriptControl must match the type passed as the generic to the Control parameter ($functionLocation)")
+        throw ManuscriptCodeGenException(
+            "The class passed to @ManuscriptControl must match the type passed as the generic to the Control parameter",
+            function,
+        )
     }
 }
 
